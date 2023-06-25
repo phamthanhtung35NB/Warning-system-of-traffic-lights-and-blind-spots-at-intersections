@@ -36,20 +36,33 @@
 // }
 #include <IRremote.h>
 
-#define IR_LED_PIN 10
+const int IR_RECEIVE_PIN = 2;    // Pin used to connect the IR receiver module (IR1838)
+const int IR_TRANSMIT_PIN = 10;   // Pin used to connect the IR LED for transmission
 
-IRsend irsend(IR_LED_PIN);
-void setup() {
+IRrecv irrecv(IR_RECEIVE_PIN);
+IRsend irsend(IR_TRANSMIT_PIN);  // Create an IRsend object for IR transmission
+decode_results results;
+
+void setup()
+{
   Serial.begin(9600);
+  irrecv.enableIRIn();
+  Serial.println("IR Receiver initialized");
+  pinMode(IR_TRANSMIT_PIN, OUTPUT);  // Set IR transmit pin as output
+  pinMode(3, OUTPUT);  // Set IR transmit pin as output
+  
 }
 
-void loop() {
-  Serial.println("-------");
-  Serial.println("12345");
-  irsend.sendSony(12345, 32);  // Gửi mã Sony (64260) trong 20 bit
-  delay(500);
-  Serial.println("-------");
-  Serial.println("10101");
-  irsend.sendSony(10101, 32);  // Gửi mã Sony (64260) trong 20 bit
-  delay(500);
+void loop()
+{
+  digitalWrite(3, 1);
+  if (irrecv.decode(&results))
+  {
+    unsigned long value = results.value;
+    Serial.println(value, DEC);
+    irrecv.resume();
+  }//Giải quyết dòng sau để truyền lại mã IR đã nhận được
+    irsend.sendSony(111, 20);
+    delay(600);
 }
+
