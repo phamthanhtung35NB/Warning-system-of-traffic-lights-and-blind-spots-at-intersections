@@ -1,10 +1,16 @@
 /**
-*thu tín hiệu khi sắp có đèn đỏ
-*phát tín hiệu khi đến giao lộ
+*thu tín hiệu khi sắp có đèn đỏ,có xe từ hướng khác đến
+*phát tín hiệu khi đến giao lộ // phát mã là biển số xe
 */
 
-unsigned long lastTime = millis();
 #include <IRremote.h>
+
+const int bienSoXe = 56789;
+
+unsigned long lastTime = millis();
+unsigned long lastTime2 = millis();
+unsigned long timeCoiChoDenDo = millis();
+unsigned long timeCoiChoXeDiQua = millis();
 
 const int IR_RECEIVE_PIN = 2;    // Pin used to connect the IR receiver module (IR1838)
 const int IR_TRANSMIT_PIN = 10;   // Pin used to connect the IR LED for transmission
@@ -26,12 +32,58 @@ void setup()
   pinMode(denDo, OUTPUT);
   pinMode(denXanh, OUTPUT);
   pinMode(denVang, OUTPUT);
-  digitalWrite(coi, LOW);
-  digitalWrite(denDo, LOW);
-  digitalWrite(denXanh, HIGH);
-  digitalWrite(denVang, LOW);
-}
 
+  digitalWrite(coi, HIGH);
+  digitalWrite(denXanh, LOW);
+  digitalWrite(denDo, LOW);
+  digitalWrite(denVang, LOW);
+
+  delay(500);
+
+  digitalWrite(coi, LOW);
+  digitalWrite(denXanh, HIGH);
+}
+void xuLiTinHieuNhan(unsigned long value){
+  if (value==144444||value==244444)
+    {
+      if (millis()-timeCoiChoDenDo>10000)
+      {
+        timeCoiChoDenDo=millis();
+        digitalWrite(coi, 1);
+      }
+      
+      if (millis()-lastTime>1000)
+      {
+        digitalWrite(coi,0);
+        lastTime=millis();
+      }
+      digitalWrite(denDo, 1);
+      digitalWrite(denXanh, 0);
+      digitalWrite(denVang, 0);
+    }
+  else if (value==111111||value==211111)
+  {
+    if (millis()-timeCoiChoXeDiQua>1000)
+      {
+        timeCoiChoXeDiQua=millis();
+        digitalWrite(coi, 1);
+      }
+      
+      if (millis()-lastTime2>500)
+      {
+        digitalWrite(coi,0);
+        lastTime2=millis();
+      }
+      digitalWrite(denDo, 0);
+      digitalWrite(denXanh, 0);
+      digitalWrite(denVang, 1);
+  }else
+  {
+    digitalWrite(denDo, 0);
+    digitalWrite(denXanh, 1);
+    digitalWrite(denVang, 0);
+  }
+}
 void loop()
 {
   
@@ -40,29 +92,21 @@ void loop()
     unsigned long value = results.value;
     // Serial.println(value, DEC);
     Serial.println(value);
+    xuLiTinHieuNhan(value);
     irrecv.resume();
-    if (value=4321&&millis()-lastTime>3000)
-    {
-      digitalWrite(coi, 1);
-      digitalWrite(denDo, 1);
-      digitalWrite(denXanh, 0);
-      digitalWrite(denVang, 0);
-      lastTime=millis();
-    } 
   }
-  irsend.sendSony(1111, 20);
   delay(600);
-  if (millis() - lastTime > 500)
-  {
-    digitalWrite(coi, 0); 
-  }
-  if (millis() - lastTime > 2000)
-  {
-    digitalWrite(coi, 0);
-    digitalWrite(denDo, 0);
-    digitalWrite(denXanh, 1);
-    digitalWrite(denVang, 0);
-  }
-  
+  // if (millis() - lastTime > 500)
+  // {
+  //   digitalWrite(coi, 0); 
+  // }
+  // if (millis() - lastTime > 2000)
+  // {
+  //   digitalWrite(coi, 0);
+  //   digitalWrite(denDo, 0);
+  //   digitalWrite(denXanh, 1);
+  //   digitalWrite(denVang, 0);
+  // }
+  irsend.sendSony(bienSoXe, 20);
 }
 

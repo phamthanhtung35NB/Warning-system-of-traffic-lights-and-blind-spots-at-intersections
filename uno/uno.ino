@@ -2,8 +2,8 @@
 *phát tín hiệu khi sắp có đèn đỏ
 *nhận tín hiệu xe đến giao lộ
 
-đèn đỏ 1444 2444
-có xe 1111 2111
+đèn đỏ 144444 244444
+có xe 111111 211111
 
 denXanh1=6;
 denVang1=7;
@@ -127,19 +127,19 @@ void vang2(){
   digitalWrite( denDo2, LOW);
 }
 void phatDenDo1(){
-  irsend.sendSony(1444, 20);
+  irsend.sendSony(144444, 20);
   delay(100);
 }
 void phatCoXe1(){
-  irsend.sendSony(1111, 20);
+  irsend.sendSony(111111, 20);
   delay(100);
 }
 void phatDenDo2(){
-  irsend02.sendSony(2444, 20);
+  irsend02.sendSony(244444, 20);
   delay(100);
 }
 void phatCoXe2(){
-  irsend02.sendSony(2111, 20);
+  irsend02.sendSony(211111, 20);
   delay(100);
 }
 //thu tín hiệu đèn 1
