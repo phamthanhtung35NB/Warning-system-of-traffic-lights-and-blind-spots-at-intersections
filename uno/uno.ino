@@ -16,7 +16,6 @@ IRsend irsend(IR_TRANSMIT_PIN01);  // Tạo đối tượng IRSEND để truyề
 IRrecv irrecv02(IR_RECEIVE_PIN02);
 IRsend irsend02(IR_TRANSMIT_PIN02); 
 
-
 decode_results results;
 decode_results results02;
 
@@ -36,10 +35,10 @@ const int timeXanh1=10000/2;   //1s=1000mls         //
 const int timeXanh2=10000/2;
 const int timeVang=3000/2;
 
-bool denDo1 = false;
-bool denDo2 = true;
-bool denVang1 = false;
-bool denVang2 = false;
+bool TFdenDo1 = false;
+bool TFdenDo2 = true;
+bool TFdenVang1 = false;
+bool TFdenVang2 = false;
 bool coXe1 = false;
 bool coXe2 = false;
 
@@ -47,7 +46,7 @@ int maHongNgoaiNhan1=0;
 int maHongNgoaiNhan2=0;
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
   // irrecv.enableIRIn();// Bắt đầu nhận tín hiệu hồng ngoại
   Serial.println("IR Receiver initialized");
   pinMode(IR_TRANSMIT_PIN01, OUTPUT);
@@ -138,21 +137,21 @@ int thuHongNgoai2(){
   }
 }
 void viewDen(){
-  if (denDo2 == true && denVang1 == false && denVang2 == false && denDo1 == false)
+  if (TFdenDo2 == true && TFdenVang1 == false && TFdenVang2 == false && TFdenDo1 == false)
   {
     xanh1();
     phatDenDo2();
   }
-  else if (denDo2 == true && denVang1 == true && denVang2 == false && denDo1 == false)
+  else if (TFdenDo2 == true && TFdenVang1 == true && TFdenVang2 == false && TFdenDo1 == false)
   {
     vang1();
   }
-  else if (denDo2 == false && denVang1 == false && denVang2 == false && denDo1 == true)
+  else if (TFdenDo2 == false && TFdenVang1 == false && TFdenVang2 == false && TFdenDo1 == true)
   {
     xanh2();
     phatDenDo1();
   }
-  else if (denDo2 == false && denVang1 == false && denVang2 == true && denDo1 == true)
+  else if (TFdenDo2 == false && TFdenVang1 == false && TFdenVang2 == true && TFdenDo1 == true)
   {
     vang2();
   }
@@ -160,40 +159,40 @@ void viewDen(){
 void loop()
 {
   // /vang 1
-  if (millis() -  lastTimeDen>timeXanh1&&denDo2==true)
+  if (millis() -  lastTimeDen>timeXanh1&&TFdenDo2==true)
   {
 
-    denDo1 = false;
-    denDo2 = true;
-    denVang1 = true;
-    denVang2 = false;
+    TFdenDo1 = false;
+    TFdenDo2 = true;
+    TFdenVang1 = true;
+    TFdenVang2 = false;
     lastTimeDen = millis();
   }
   // xanh 2
-  else if (millis() -  lastTimeDen>timeVang&&denVang1==true)
+  else if (millis() -  lastTimeDen>timeVang&&TFdenVang1==true)
   {
-    denDo1 = true;
-    denDo2 = false;
-    denVang1 = false;
-    denVang2 = false;
+    TFdenDo1 = true;
+    TFdenDo2 = false;
+    TFdenVang1 = false;
+    TFdenVang2 = false;
     lastTimeDen = millis();
   }
   //vàng 2
-  else if (millis() -  lastTimeDen>timeXanh2&&denDo1==true)
+  else if (millis() -  lastTimeDen>timeXanh2&&TFdenDo1==true)
   {
-    denDo1 = true;
-    denDo2 = false;
-    denVang1 = false;
-    denVang2 = true;
+    TFdenDo1 = true;
+    TFdenDo2 = false;
+    TFdenVang1 = false;
+    TFdenVang2 = true;
     lastTimeDen = millis();
   }
   // xanh1
-  else if (millis() -  lastTimeDen>timeVang&&denVang2==true)
+  else if (millis() -  lastTimeDen>timeVang&&TFdenVang2==true)
   {
-    denDo1 = false;
-    denDo2 = true;
-    denVang1 = false;
-    denVang2 = false;
+    TFdenDo1 = false;
+    TFdenDo2 = true;
+    TFdenVang1 = false;
+    TFdenVang2 = false;
     lastTimeDen = millis();
   }
   viewDen();
