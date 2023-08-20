@@ -1,7 +1,32 @@
 /**
 *phát tín hiệu khi sắp có đèn đỏ
 *nhận tín hiệu xe đến giao lộ
+
+đèn đỏ 1444 2444
+có xe 1111 2111
+
+denXanh1=6;
+denVang1=7;
+denDo1=8;
+
+denXanh2=9;
+denVang2=10;
+denDo2=11;
+
+timeXanh1=10000/2;   //1s=1000mls 
+timeXanh2=10000/2;
+timeVang=3000/2;
+
 */
+
+///////////////////////////////////////////////
+                                             //
+const int timeXanh1=10000/2;   //1s=1000mls  //
+const int timeXanh2=10000/2;                 //
+const int timeVang=3000/2;                   //
+                                             //
+///////////////////////////////////////////////
+
 #include <IRremote.h>
 const int IR_RECEIVE_PIN01 = 2; //thu
 const int IR_TRANSMIT_PIN01 = 3; //phast
@@ -31,10 +56,6 @@ const int denXanh2=9;
 const int denVang2=10;
 const int denDo2=11;
 
-const int timeXanh1=10000/2;   //1s=1000mls         //
-const int timeXanh2=10000/2;
-const int timeVang=3000/2;
-
 bool TFdenDo1 = false;
 bool TFdenDo2 = true;
 bool TFdenVang1 = false;
@@ -46,7 +67,7 @@ int maHongNgoaiNhan1=0;
 int maHongNgoaiNhan2=0;
 void setup()
 {
-  Serial.begin(115200);
+  Serial.begin(9600);
   // irrecv.enableIRIn();// Bắt đầu nhận tín hiệu hồng ngoại
   Serial.println("IR Receiver initialized");
   pinMode(IR_TRANSMIT_PIN01, OUTPUT);
@@ -56,9 +77,14 @@ void setup()
   pinMode(denXanh1, OUTPUT);
   pinMode(denVang1, OUTPUT);
 
-  digitalWrite(denDo1, LOW);
-  digitalWrite(denXanh1, HIGH);
-  digitalWrite(denVang1, LOW);
+  pinMode(denDo2, OUTPUT);
+  pinMode(denXanh2, OUTPUT);
+  pinMode(denVang2, OUTPUT);
+
+  TFdenDo2==true;
+  // digitalWrite(denDo1, LOW);
+  // digitalWrite(denXanh1, HIGH);
+  // digitalWrite(denVang1, LOW);
 }
 void xanh1(){
   //xanh dai on-đỏ ngắn on
@@ -101,7 +127,7 @@ void vang2(){
   digitalWrite( denDo2, LOW);
 }
 void phatDenDo1(){
-  irsend.sendSony(4321, 20);
+  irsend.sendSony(1444, 20);
   delay(100);
 }
 void phatCoXe1(){
@@ -109,13 +135,14 @@ void phatCoXe1(){
   delay(100);
 }
 void phatDenDo2(){
-  irsend02.sendSony(4321, 20);
+  irsend02.sendSony(2444, 20);
   delay(100);
 }
 void phatCoXe2(){
-  irsend02.sendSony(1111, 20);
+  irsend02.sendSony(2111, 20);
   delay(100);
 }
+//thu tín hiệu đèn 1
 int thuHongNgoai1(){
   if (irrecv.decode(&results))
   {
@@ -126,6 +153,7 @@ int thuHongNgoai1(){
     return value;
   }
 }
+//thu tín hiệu đèn 2
 int thuHongNgoai2(){
   if (irrecv02.decode(&results02))
   {
@@ -137,28 +165,31 @@ int thuHongNgoai2(){
   }
 }
 void viewDen(){
-  if (TFdenDo2 == true && TFdenVang1 == false && TFdenVang2 == false && TFdenDo1 == false)
+  if (TFdenDo2 == true && TFdenVang1 == false 
+  && TFdenVang2 == false && TFdenDo1 == false)
   {
     xanh1();
     phatDenDo2();
   }
-  else if (TFdenDo2 == true && TFdenVang1 == true && TFdenVang2 == false && TFdenDo1 == false)
+  else if (TFdenDo2 == true && TFdenVang1 == true 
+  && TFdenVang2 == false && TFdenDo1 == false)
   {
     vang1();
   }
-  else if (TFdenDo2 == false && TFdenVang1 == false && TFdenVang2 == false && TFdenDo1 == true)
+  else if (TFdenDo2 == false && TFdenVang1 == false 
+  && TFdenVang2 == false && TFdenDo1 == true)
   {
     xanh2();
     phatDenDo1();
   }
-  else if (TFdenDo2 == false && TFdenVang1 == false && TFdenVang2 == true && TFdenDo1 == true)
+  else if (TFdenDo2 == false && TFdenVang1 == false 
+  && TFdenVang2 == true && TFdenDo1 == true)
   {
     vang2();
   }
 }
-void loop()
-{
-  // /vang 1
+bool control_Led(){
+  // xanh1->vang 1
   if (millis() -  lastTimeDen>timeXanh1&&TFdenDo2==true)
   {
 
@@ -167,17 +198,19 @@ void loop()
     TFdenVang1 = true;
     TFdenVang2 = false;
     lastTimeDen = millis();
+    return true;
   }
-  // xanh 2
-  else if (millis() -  lastTimeDen>timeVang&&TFdenVang1==true)
+  // vang1->xanh 2
+  else if (millis() -  lastTimeDen>timeVang&&TFdenVang1==true&&TFdenDo2==true)
   {
     TFdenDo1 = true;
     TFdenDo2 = false;
     TFdenVang1 = false;
     TFdenVang2 = false;
     lastTimeDen = millis();
+    return true;
   }
-  //vàng 2
+  //xanh2->vàng 2
   else if (millis() -  lastTimeDen>timeXanh2&&TFdenDo1==true)
   {
     TFdenDo1 = true;
@@ -185,8 +218,9 @@ void loop()
     TFdenVang1 = false;
     TFdenVang2 = true;
     lastTimeDen = millis();
+    return true;
   }
-  // xanh1
+  //vang2-> xanh1
   else if (millis() -  lastTimeDen>timeVang&&TFdenVang2==true)
   {
     TFdenDo1 = false;
@@ -194,17 +228,32 @@ void loop()
     TFdenVang1 = false;
     TFdenVang2 = false;
     lastTimeDen = millis();
+    return true;
   }
-  viewDen();
+  return false;
+}
+void loop()
+{
+  if(control_Led()){
+    viewDen();
+  }
   if (millis()-timeCheckThu>250)
   {
-    maHongNgoaiNhan1=thuHongNgoai1();
-    maHongNgoaiNhan2=thuHongNgoai2();
+    //nếu có xe đến đèn 1
+    if (thuHongNgoai1()!=1111&&thuHongNgoai1()!=2111&&thuHongNgoai1()!=1444&&thuHongNgoai1()!=2444)
+    {
+      phatCoXe2();
+    }
+    //nếu có xe đến đèn 2
+    if (thuHongNgoai2()!=1111&&thuHongNgoai2()!=2111&&thuHongNgoai2()!=1444&&thuHongNgoai2()!=2444)
+    {
+      phatCoXe1();
+    }
+    timeCheckThu=millis();
   }
-  //nếu có xe đến 1
-  phatCoXe2();
-  //nếu có xe đến 2
-  phatCoXe1();
+
+
+  
 
   
   // if (millis() - timeCheckThu1 > 500)
