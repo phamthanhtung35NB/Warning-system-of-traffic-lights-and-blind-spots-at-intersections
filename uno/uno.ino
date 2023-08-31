@@ -46,6 +46,10 @@ decode_results results02;
 
 unsigned long timeCheckThu = millis();
 unsigned long timeCheckThu2 = millis();
+
+unsigned long lastTime = millis();
+unsigned long lastTime2 = millis();
+
 unsigned long lastTimeDen = -10000;
 
 const int denXanh1=6;
@@ -128,19 +132,19 @@ void vang2(){
 }
 void phatDenDo1(){
   irsend.sendSony(144444, 30);
-  delay(90);
+  delay(20);
 }
 void phatCoXe1(){
-  irsend.sendSony(122222, 22);
-  delay(90);
+  irsend.sendSony(122222, 30);
+  delay(20);
 }
 void phatDenDo2(){
   irsend02.sendSony(244444, 30);
-  delay(90);
+  delay(20);
 }
 void phatCoXe2(){
-  irsend02.sendSony(222222, 22);
-  delay(90);
+  irsend02.sendSony(222222, 30);
+  delay(20);
 }
 //thu tín hiệu đèn 1
 unsigned long thuHongNgoai1(){
@@ -251,15 +255,25 @@ void loop()
   // if (millis()-timeCheckThu>250)
   // {
   //   //nếu có xe đến đèn 1
-  //   if (thuHongNgoai1()!=122222&&thuHongNgoai1()!=222222&&thuHongNgoai1()!=144444&&thuHongNgoai1()!=244444)
-  //   {
-  //     // phatCoXe2();
-  //   }
-  //   //nếu có xe đến đèn 2
-  //   if (thuHongNgoai2()!=122222&&thuHongNgoai2()!=222222&&thuHongNgoai2()!=144444&&thuHongNgoai2()!=244444)
-  //   {
-  //     // phatCoXe1();
-  //   }
+    int thuHN1=thuHongNgoai1();  
+    int thuHN2=thuHongNgoai2();  
+    if ((thuHN1!=122222&&thuHN1!=222222&&thuHN1!=144444&&thuHN1!=244444)||thuHN1<99999)
+    {
+      if (millis() - lastTime > 300)
+      {
+        phatCoXe2();
+        lastTime=millis();
+      }
+    }
+    //nếu có xe đến đèn 2
+    if ((thuHN2!=122222&&thuHN2!=222222&&thuHN2!=144444&&thuHN2!=244444)||thuHN2<99999)
+    {
+      if (millis() - lastTime2 > 300)
+      {
+        phatCoXe1();
+        lastTime2=millis();
+      }
+    }
   //   timeCheckThu=millis();
   // }
 

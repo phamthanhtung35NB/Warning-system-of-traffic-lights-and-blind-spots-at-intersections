@@ -5,13 +5,13 @@
 
 #include <IRremote.h>
 
-const int bienSoXe = 56789;
+const int bienSoXe = 8888;
 
 unsigned long lastTime = millis();
 unsigned long lastTime2 = millis();
 unsigned long timeCoiChoDenDo = millis();
 unsigned long timeCoiChoXeDiQua = millis();
-
+       
 const int IR_RECEIVE_PIN = 2;    // Pin used to connect the IR receiver module (IR1838)
 const int IR_TRANSMIT_PIN = 10;   // Pin used to connect the IR LED for transmission
 const int coi =9;
@@ -55,53 +55,72 @@ void xuLiTinHieuNhan(unsigned long value){
   // }
   if (value==122222||value==222222)
   {
-    if (millis()-timeCoiChoXeDiQua>1000)
-      {
-        timeCoiChoXeDiQua=millis();
-        digitalWrite(coi, 1);
-      }
+    // if (millis()-timeCoiChoXeDiQua>1000)
+    //   {
+    //     timeCoiChoXeDiQua=millis();
+    //     digitalWrite(coi, 1);
+    //   }
       
-      if (millis()-lastTime2>500)
-      {
-        digitalWrite(coi,0);
-        lastTime2=millis();
-      }
+    //   if (millis()-lastTime2>500)
+    //   {
+    //     digitalWrite(coi,0);
+    //     lastTime2=millis();
+    //   }
+
       digitalWrite(denDo, 0);
       digitalWrite(denXanh, 0);
       digitalWrite(denVang, 1);
+      digitalWrite(coi,1);
+      delay(200);
+      digitalWrite(coi,0);
+      delay(200);
+      digitalWrite(coi,1);
+      delay(200);
+      digitalWrite(coi,0);
+      delay(200);
+      digitalWrite(denDo, 0);
+      digitalWrite(denXanh, 1);
+      digitalWrite(denVang, 0);
   }
   else if ((value==244444||value==144444))
     {
-      if (millis()-timeCoiChoDenDo>2000&&checkCoi==0)
+      if (millis()-timeCoiChoDenDo>300)//&&checkCoi==0)
       {
         // 
-        timeCoiChoDenDo=millis();
-        digitalWrite(coi, 1);
-        checkCoi=1;
-      }
-      
-      if (millis()-timeCoiChoDenDo>1000&&checkCoi==1)
-      {
-        // lastTime=millis();
-        digitalWrite(coi,0);timeCoiChoDenDo=millis();
-      }
       digitalWrite(denDo, 1);
       digitalWrite(denXanh, 0);
       digitalWrite(denVang, 0);
+        timeCoiChoDenDo=millis();
+        digitalWrite(coi, 1);
+        checkCoi=1;
+        delay(1000);
+        digitalWrite(coi,0);timeCoiChoDenDo=millis();
+        delay(2000);
+        digitalWrite(denDo, 0);
+    digitalWrite(denXanh, 1);
+    digitalWrite(denVang, 0);
+      }
+      
+      
       
       
     } else
-  {delay(200);
-    digitalWrite(denDo, 0);
-    digitalWrite(denXanh, 1);
-    digitalWrite(denVang, 0);
-    
+  {delay(100);
+   
   }
-  
+  // if (millis()-timeCoiChoDenDo>1000&&checkCoi==1)
+  //     {
+  //       // lastTime=millis();
+  //       digitalWrite(coi,0);timeCoiChoDenDo=millis();
+  //        digitalWrite(denDo, 0);
+  //   digitalWrite(denXanh, 1);
+  //   digitalWrite(denVang, 0);
+  //     }
+    
 }
 void loop()
 {
-  delay(50);
+  delay(10);
   if (irrecv.decode(&results))
   {
     unsigned long value = results.value;
@@ -111,18 +130,15 @@ void loop()
     irrecv.resume();
   }
   
-  Serial.println("value");
+  // Serial.println("value");
   // if (millis() - lastTime > 500)
   // {
   //   digitalWrite(coi, 0); 
   // }
-  // if (millis() - lastTime > 2000)
-  // {
-  //   digitalWrite(coi, 0);
-  //   digitalWrite(denDo, 0);
-  //   digitalWrite(denXanh, 1);
-  //   digitalWrite(denVang, 0);
-  // }
+  if (millis() - lastTime > 300)
+  {
   irsend.sendSony(bienSoXe, 20);
+  lastTime=millis();
+  }
 }
 
