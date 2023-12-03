@@ -3,7 +3,7 @@
 *nhận tín hiệu xe đến giao lộ
 
 đèn đỏ 144444 244444
-có xe 111111 211111
+có xe 122222 222222
 
 denXanh1=6;
 denVang1=7;
@@ -242,6 +242,10 @@ void loop()
   if(control_Led()){
     viewDen();
   }
+
+
+
+
   if (TFdenDo2 == true && TFdenVang1 == false 
   && TFdenVang2 == false && TFdenDo1 == false)
   {
@@ -257,7 +261,7 @@ void loop()
   //   //nếu có xe đến đèn 1
     int thuHN1=thuHongNgoai1();  
     int thuHN2=thuHongNgoai2();  
-    if ((thuHN1!=122222&&thuHN1!=222222&&thuHN1!=144444&&thuHN1!=244444)||thuHN1<99999)
+    if (thuHN1==6868)
     {
       if (millis() - lastTime > 300)
       {
@@ -266,7 +270,7 @@ void loop()
       }
     }
     //nếu có xe đến đèn 2
-    if ((thuHN2!=122222&&thuHN2!=222222&&thuHN2!=144444&&thuHN2!=244444)||thuHN2<99999)
+    if (thuHN2==6868)
     {
       if (millis() - lastTime2 > 300)
       {
@@ -274,26 +278,5 @@ void loop()
         lastTime2=millis();
       }
     }
-  //   timeCheckThu=millis();
-  // }
-
-// irsend.sendSony(144444, 22);
-//   delay(100);
-//   irsend02.sendSony(244444, 22);
-//   delay(100);
-  
-
-  
-  // if (millis() - timeCheckThu1 > 500)
-  // {
-  //   digitalWrite(coi, 0); 
-  // }
-  // if (millis() - timeCheckThu1 > 2000)
-  // {
-  //   digitalWrite(coi, 0);
-  //   digitalWrite(denDo, 0);
-  //   digitalWrite(denXanh, 1);
-  //   digitalWrite(denVang, 0);
-  // }
   
 }

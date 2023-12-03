@@ -5,7 +5,7 @@
 
 #include <IRremote.h>
 
-const int bienSoXe = 8888;
+const int bienSoXe = 6868;
 
 unsigned long lastTime = millis();
 unsigned long lastTime2 = millis();
@@ -50,23 +50,9 @@ Serial.println("set3");
   digitalWrite(denXanh, HIGH);
 }
 void xuLiTinHieuNhan(unsigned long value){
-  // if(value==111){
-  //   Serial.println("cook");
-  // }
+//có xe
   if (value==122222||value==222222)
   {
-    // if (millis()-timeCoiChoXeDiQua>1000)
-    //   {
-    //     timeCoiChoXeDiQua=millis();
-    //     digitalWrite(coi, 1);
-    //   }
-      
-    //   if (millis()-lastTime2>500)
-    //   {
-    //     digitalWrite(coi,0);
-    //     lastTime2=millis();
-    //   }
-
       digitalWrite(denDo, 0);
       digitalWrite(denXanh, 0);
       digitalWrite(denVang, 1);
@@ -105,8 +91,8 @@ void xuLiTinHieuNhan(unsigned long value){
       
       
     } else
-  {delay(100);
-   
+  {
+    delay(100);
   }
   // if (millis()-timeCoiChoDenDo>1000&&checkCoi==1)
   //     {
@@ -129,12 +115,7 @@ void loop()
     xuLiTinHieuNhan(value);
     irrecv.resume();
   }
-  
-  // Serial.println("value");
-  // if (millis() - lastTime > 500)
-  // {
-  //   digitalWrite(coi, 0); 
-  // }
+
   if (millis() - lastTime > 300)
   {
   irsend.sendSony(bienSoXe, 20);
