@@ -101,13 +101,13 @@ void xuLiTinHieuNhan(long value) {
 }
 void loop() {
   delay(20);
-  long value=0;
+  long value = 0;
   if (irrecv.decode(&results)) {
-     value = results.value;
+    value = results.value;
     // Serial.println(value, DEC);
-    if (value!=68){
-    Serial.println(value);
-    xuLiTinHieuNhan(value);
+    if (value != 68) {
+      Serial.println(value);
+      xuLiTinHieuNhan(value);
     }
     irrecv.resume();
   }
